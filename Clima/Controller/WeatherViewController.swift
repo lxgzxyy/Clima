@@ -1,3 +1,13 @@
+/*
+ 練習ポイント：
+ 1.delegateの使い方
+ 2.protocolの使い方
+ 3.APIからデータを取得し、画面で反映
+ 4.locationManagerの使い方
+ 5.エラー処理
+ 6.MVCアーキテクチャの実装
+ */
+
 import UIKit
 import CoreLocation
 

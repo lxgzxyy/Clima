@@ -20,13 +20,13 @@ struct WeatherManager {
     
     //call the API
     func performRequest(urlString: String){
-        //1. Create a URL
+        //Create a URL
         if let url = URL(string: urlString) {
             
-            //2. Create a URLSession (just like a browser)
+            //Create a URLSession (just like a browser)
             let session = URLSession(configuration: .default)
             
-            //3. Give the session a task
+            //Give the session a task
             let task = session.dataTask(with: url) { data, response, error in     //closure
                 if error != nil {
                     self.delegate?.didFailWithError(error!)

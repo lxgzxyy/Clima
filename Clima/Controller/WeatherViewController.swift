@@ -1,8 +1,7 @@
-
-
 import UIKit
+import CoreLocation
 
-class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManagerDelegate {
+class WeatherViewController: UIViewController, CLLocationManagerDelegate {
 
     @IBOutlet weak var conditionImageView: UIImageView!
     @IBOutlet weak var temperatureLabel: UILabel!
@@ -10,16 +9,41 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
     @IBOutlet weak var searchTextField: UITextField!
     
     var weatherManager = WeatherManager()
+    let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //ask user for authorization
+        locationManager.requestWhenInUseAuthorization()
+        
+        locationManager.delegate = self
+        
+        locationManager.requestLocation()
         
         //set a delegate to monitor text field
         searchTextField.delegate = self
         
         weatherManager.delegate = self
-    }
 
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.last {
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            print(lat, lon)
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
+    }
+}
+
+//MARK: - UITextFieldDelegate
+extension WeatherViewController: UITextFieldDelegate {
+    
     @IBAction func searchPressed(_ sender: UIButton) {
         searchTextField.endEditing(true)
     }
@@ -50,8 +74,12 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
         }
         
         searchTextField.text = ""
-        
+      
     }
+}
+
+//MARK: - WeatherManagerDelegate
+extension WeatherViewController: WeatherManagerDelegate {
     
     func didUpdateWeather(_ weather: WeatherModel) {
         DispatchQueue.main.async { [self] in
@@ -65,5 +93,4 @@ class WeatherViewController: UIViewController, UITextFieldDelegate, WeatherManag
     func didFailWithError(_ error: Error) {
         print(error)
     }
-    
 }
